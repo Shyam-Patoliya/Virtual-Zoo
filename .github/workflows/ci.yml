@@ -1,5 +1,4 @@
 name: Build and Push Docker Image
-
 on:
   push:
     branches: [ "main" ]
@@ -32,18 +31,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Kubeconfig
-        uses: azure/k8s-set-context@v3 
-        with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+      - name: Create kind cluster
+        uses: helm/kind-action@v1.10.0
 
       - name: Install Ansible dependencies
         run: pip install ansible openshift
 
       - name: Install Kubernetes collection for Ansible
-        run: ansible-galaxy collection install community.kubernetes
+        run: ansible-galaxy collection install kubernetes.core
 
       - name: Run Ansible Playbook
         run: ansible-playbook deploy.yml
-        
