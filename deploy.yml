@@ -3,7 +3,8 @@
   connection: local
   tasks:
     - name: Apply Kubernetes Deployment and Service
-      community.kubernetes.k8s:
+      # This is the corrected module name
+      kubernetes.core.k8s:
         state: present
         src: "{{ item }}"
       loop:
