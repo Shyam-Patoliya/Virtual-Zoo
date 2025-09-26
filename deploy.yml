@@ -3,10 +3,10 @@
   connection: local
   tasks:
     - name: Apply Kubernetes Deployment and Service
-      # This is the corrected module name
       kubernetes.core.k8s:
         state: present
         src: "{{ item }}"
+        namespace: default
       loop:
         - "k8s/deployment.yaml"
         - "k8s/service.yaml"
