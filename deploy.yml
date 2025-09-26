@@ -1,4 +1,3 @@
----
 - name: Deploy Virtual Zoo to Kubernetes
   hosts: localhost
   connection: local
