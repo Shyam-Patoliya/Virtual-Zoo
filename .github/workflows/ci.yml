@@ -24,3 +24,22 @@ jobs:
           push: true
 
           tags: shyam2210/virtual-zoo:latest
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Kubeconfig
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      - name: Install Ansible dependencies
+        run: pip install ansible openshift
+
+      - name: Run Ansible Playbook
+        run: ansible-playbook deploy.yml
+
