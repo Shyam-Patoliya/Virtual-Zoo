@@ -34,6 +34,13 @@ jobs:
       - name: Create kind cluster
         uses: helm/kind-action@v1.10.0
 
+      - name: Install Prometheus using Helm
+        run: |
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo update
+          # Install the prometheus stack in its own 'monitoring' namespace
+          helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace --wait
+          
       - name: Install Ansible dependencies
         run: pip install ansible openshift
 
@@ -42,3 +49,11 @@ jobs:
 
       - name: Run Ansible Playbook
         run: ansible-playbook deploy.yml
+
+      - name: Verify deployments
+        run: |
+          echo "Verifying application pods..."
+          kubectl wait --for=condition=available --timeout=60s deployment/virtual-zoo-deployment -n default
+          echo "Verifying monitoring pods..."
+          kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=prometheus -n monitoring --timeout=120s
+          echo "All pods are running!"
