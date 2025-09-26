@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: virtual-zoo-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: virtual-zoo
+  template:
+    metadata:
+      labels:
+        app: virtual-zoo
+    spec:
+      containers:
+      - name: virtual-zoo-container
+        image: shyam2210/virtual-zoo:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
